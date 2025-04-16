@@ -1,14 +1,14 @@
-from typing import Optional
+import asyncio
+import websockets
 
-from fastapi import FastAPI
+async def websocket_client():
+    uri = "wss://echo.websocket.events"
+    async with websockets.connect(uri) as websocket:
+        message = "Hello from client!"
+        print(f"Sending: {message}")
+        await websocket.send(message)
 
-app = FastAPI()
+        response = await websocket.recv()
+        print(f"Received: {response}")
 
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+asyncio.run(websocket_client())
